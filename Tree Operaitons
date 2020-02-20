@@ -1,0 +1,144 @@
+
+#include<iostream>
+using namespace std;
+
+//Ağaç oluşturma
+
+struct nodetype {
+	int info;
+	struct nodetype *left;
+	struct nodetype *right;
+	struct nodetype *father;
+};
+typedef struct nodetype *NODEPTR;
+
+NODEPTR ekle(NODEPTR agac, int eklenecekDeger) {
+	if (agac == NULL) {
+		nodetype* kok =  new nodetype;
+		kok->info = eklenecekDeger;
+		kok->right = NULL;
+		kok->left = NULL;
+
+		return kok;
+	}
+	else if (agac->info < eklenecekDeger) {
+		agac->right = ekle(agac->right, eklenecekDeger);
+	}
+	else {
+		agac->left = ekle(agac->left, eklenecekDeger);
+	}
+	return agac;
+
+}
+void LDR(NODEPTR agac) {
+	if (agac == NULL) {
+		return;
+	}
+	LDR(agac->left);
+	cout << agac->info << " ";
+	LDR(agac->right);
+
+}
+
+
+//Stack oluşturma
+#define STACKSIZE 100
+
+struct stack {
+	int top;
+	int items[STACKSIZE];
+};
+
+struct stack mystack;
+
+//Stack'e eleman ekleme fonksiyonu
+void push(int x) {
+
+	if (mystack.top == STACKSIZE - 1) {
+		cout << "Stack dolu! " << endl;
+		exit(1);
+	}
+	else
+		(mystack.top)++;
+	mystack.items[mystack.top] = x;
+	return;
+}
+//Stack'ten eleman çıkartma fonksiyonu
+int pop() {
+	int temp;
+	if (mystack.top == STACKSIZE - 1) {
+		cout << "stack bos";
+
+	}
+	else {
+		temp = mystack.items[mystack.top];
+		mystack.top = mystack.top - 1;
+	}
+	return temp;
+}
+//Stack elemanlarını yazdıran fonksiyon
+void display() {
+	if (mystack.top == -1) {
+		cout << "stack bos";
+		return;
+	}
+	else {
+		cout << "Stack Elemanlari:" << endl;
+		for (int i = mystack.top; i >= 0; i--) {
+			cout << mystack.items[i] << endl;
+		}
+		cout << endl;
+	}
+}
+
+//Stack'ten okunan elemanları ağaca ekleme fonksiyonu
+
+
+
+int main() {
+	NODEPTR ptree = NULL;
+
+	int temp;
+	int selection;
+	mystack.top = -1;
+
+	while (1)
+	{
+		cout << "*** *** ***" << endl;
+		cout << " 1 --> Yigita eleman Ekle " << endl;
+		cout << " 2 --> Yigittan eleman Sil " << endl;
+		cout << " 3 --> Yigittaki elemanlari yazdir " << endl<<"***STACK***"<<endl;
+		cout << " 4 --> Elemanları ikili agaca tasi ve agaci yazdir " << endl;
+		cout << "*** *** ***" << endl;
+		cout << "Seciminizi girin: ";
+		cin >> selection;
+		switch (selection) {
+		case 1:
+			cout << "Eklenecek elemani giriniz: ";
+			cin >> temp;
+			push(temp);
+			break;
+		case 2:
+			pop();
+			break;
+		case 3:
+			display();
+			break;
+		case 4:
+
+			for (int i = mystack.top; i >= 0; i--)
+			{
+				ptree = ekle(ptree, mystack.items[i]);
+			}
+			cout << "Agactaki elemanlar: " << endl;
+			LDR(ptree);
+			cout << endl;
+			break;
+		}
+	}
+
+
+
+	system("pause");
+	return 0;
+}
